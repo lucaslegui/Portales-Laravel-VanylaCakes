@@ -2,45 +2,111 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Productos;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
-    public function all()
+    public function catalog()
     {
-        $products = Productos::all();
-
-
-
-        return view('products.index', ['products' => $products]);
+        $products = Product::all();
+        return view('products.catalogo')->with('products', $products);
     }
 
-    public function view(int $product_id)
+    public function index()
     {
-        $product = Productos::findOrFail($product_id);
-        return view('products.view', ['product' => $product]);
+        $products = Product::with('category')->get();
+        return view('products.index')->with('products', $products);
     }
 
-    public function add()
+    public function create()
     {
-        return view('products.add');
+        $categories = Category::all();
+        return view('products.create')->with('categories', $categories);
     }
 
-    public function createProcess()
+    public function createProcess(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'required|string',
+            'ingredients' => 'required|string',
+            'price' => 'required|integer',
+            'image' => 'required|image',
+            'stock' => 'required|integer',
+        ]);
 
-        $product = new Productos();
-        $product->name = request('name');
-        $product->category = request('category_id');
-        $product->description = request('description');
-        $product->ingredients = request('ingredients');
-        $product->image = request('image');
-        $product->price = request('price');
-        $product->exists = request('exists');
+        $imagePath = $request->file('image')->store('images', 'public');
+
+        Product::create([
+            'name' => $request->name,
+            'category_id' => $request->category_id,
+            'description' => $request->description,
+            'ingredients' => $request->ingredients,
+            'price' => $request->price,
+            'image' => $imagePath,
+            'stock' => $request->stock,
+        ]);
+
+        return redirect()->route('products.index')->with('feedback.message', 'Producto agregado exitosamente');
+    }
+
+    public function show($id)
+    {
+        $product = Product::with('category')->findOrFail($id);
+        return view('products.show')->with('product', $product);
+    }
+
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        $categories = Category::all();
+        return view('products.edit')->with(['product' => $product, 'categories' => $categories]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'required|string',
+            'ingredients' => 'required|string',
+            'price' => 'required|integer',
+            'image' => 'nullable|image',
+            'stock' => 'required|integer',
+        ]);
+
+        $product = Product::findOrFail($id);
+        $product->name = $request->name;
+        $product->category_id = $request->category_id;
+        $product->description = $request->description;
+        $product->ingredients = $request->ingredients;
+        $product->price = $request->price;
+        $product->stock = $request->stock;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $product->image = $imagePath;
+        }
+
         $product->save();
-        return redirect()->route('products.index');
 
+        return redirect()->route('products.index')->with('feedback.message', 'Producto actualizado exitosamente');
+    }
 
+    public function confirmDelete($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('products.confirm-delete')->with('product', $product);
+    }
+
+    public function delete($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()->route('products.index')->with('feedback.message', 'Producto eliminado exitosamente');
     }
 }

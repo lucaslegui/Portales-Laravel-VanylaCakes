@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -18,9 +17,9 @@ class productSeeder extends Seeder
                 'name' => 'Tarta de Manzana Sin Gluten',
                 'description' => 'Deliciosa tarta de manzana sin gluten con una base crujiente y relleno de manzanas frescas.',
                 'ingredients' => 'manzanas, azúcar, harina de arroz, mantequilla, huevos, canela',
-                'image' => 'apple-pie.jpg',
+                'image' => 'img_products/apple-pie.jpg',
                 'price' => 3000,
-                'exists' => true,
+                'stock' => 10,
                 'created_at' => now(),
                 'updated_at' => now(),
                 'category_id' => 2
@@ -31,7 +30,7 @@ class productSeeder extends Seeder
                 'ingredients' => 'Harina de almendra, fresas, azúcar, crema de fresa',
                 'image' => 'img_products/pastelFresas.jpeg',
                 'price' => 5000,
-                'exists' => true,
+                'stock' => 5,
                 'created_at' => now(),
                 'updated_at' => now(),
                 'category_id' => 1
@@ -42,7 +41,7 @@ class productSeeder extends Seeder
                 'ingredients' => 'Harina de almendra, chocolate, azúcar, crema de chocolate',
                 'image' => 'img_products/cupcakes_chocolate.jpg',
                 'price' => 1500,
-                'exists' => true,
+                'stock' => 20,
                 'created_at' => now(),
                 'updated_at' => now(),
                 'category_id' => 3
@@ -51,14 +50,13 @@ class productSeeder extends Seeder
                 'name' => 'Brownie de Menta Sin Gluten',
                 'description' => 'Brownie de menta sin gluten con un refrescante sabor a menta.',
                 'ingredients' => 'Harina de almendra, menta, azúcar, chocolate',
-                'image' => 'img_products/galletas_chocolate.jpg',
+                'image' => 'img_products/brownie_menta.jpg',
                 'price' => 1500,
-                'exists' => true,
+                'stock' => 15,
                 'created_at' => now(),
                 'updated_at' => now(),
-                'category_id' => 3
+                'category_id' => 4
             ]
         ]);
-
     }
 }

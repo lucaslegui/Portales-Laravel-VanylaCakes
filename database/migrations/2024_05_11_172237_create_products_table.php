@@ -12,16 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->bigIncrements('product_id');
+            $table->id();
             $table->string('name');
+            $table->foreignId('category_id')->constrained('categories');
             $table->text('description');
-            $table->string('ingredients');
+            $table->text('ingredients');
+            $table->integer('price');
             $table->string('image');
-            $table->unsignedInteger('price');
-            $table->boolean('exists');
+            $table->integer('stock');
             $table->timestamps();
-            $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('category_id')->on('categories');
         });
     }
 

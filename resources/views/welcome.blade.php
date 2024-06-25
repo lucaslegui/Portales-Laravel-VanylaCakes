@@ -4,5 +4,5 @@
         Home
     </x-slot>
 
-    <h1>hola mundo!!</h1>
+    <h1>Home</h1>
 </x-layout>
